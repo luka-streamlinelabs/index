@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Supplement Guide">
+<title>Supplement Guide — Luka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0;
+    --text2: #888;
+    --text3: #555;
+    --accent: #c8f060;
+    --accent-dim: rgba(200,240,96,0.12);
+    --blue: #60a5fa;
+    --blue-dim: rgba(96,165,250,0.12);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251,191,36,0.12);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --gray-dim: rgba(255,255,255,0.06);
+    --red: #f87171;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+  }
+  .header {
+    padding: 56px 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .header p {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* Tab switcher */
+  .tab-wrap {
+    padding: 16px 20px 0;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    margin-bottom: 16px;
+  }
+  .tab {
+    flex: 1;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .tab.active {
+    background: var(--surface2);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  /* Plan content */
+  .plan { display: none; }
+  .plan.active { display: block; }
+
+  /* Section header */
+  .section-head {
+    padding: 20px 20px 10px;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    text-transform: uppercase;
+  }
+
+  /* Timeline */
+  .timeline {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .tl-item {
+    display: flex;
+    gap: 14px;
+    padding-bottom: 4px;
+  }
+  .tl-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 54px;
+    flex-shrink: 0;
+  }
+  .tl-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    white-space: nowrap;
+    padding-top: 14px;
+    line-height: 1;
+  }
+  .tl-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 8px;
+  }
+  .tl-line {
+    width: 1px;
+    flex: 1;
+    background: var(--border);
+    margin-top: 6px;
+    min-height: 20px;
+  }
+  .tl-card {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .tl-card-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .pill {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    line-height: 1;
+  }
+  .pill-pre { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(96,165,250,0.2); }
+  .pill-post { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(200,240,96,0.2); }
+  .pill-health { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .pill-intra { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+  .pill-food { background: var(--gray-dim); color: var(--text2); border: 1px solid var(--border); }
+  .tl-note {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.55;
+  }
+
+  /* Legend */
+  .legend {
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+  .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* Stack overview cards */
+  .stack-section { padding: 0 20px; }
+  .stack-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .stack-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .stack-meta {
+    font-size: 11px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+  .stack-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 6px;
+  }
+
+  /* Pro tips */
+  .tips-section { padding: 0 20px; }
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .tip-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .tip-body {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.55;
+  }
+
+  /* Nav tabs bottom */
+  .nav-tabs {
+    position: sticky;
+    bottom: 0;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    display: flex;
+  }
+  .nav-tab {
+    flex: 1;
+    padding: 12px 8px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text3);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+  }
+  .nav-tab.active { color: var(--accent); }
+  .nav-tab svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-header {
+    padding: 24px 20px 10px;
+  }
+  .page-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .page-header p {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-eyebrow">Luka Frankovich</div>
+  <h1>Supplement<br>Timing Guide</h1>
+  <p>Summer 2026 — Hypertrophy + Endurance Phase</p>
+</div>
+
+<!-- BOTTOM NAV -->
+<div id="page-schedule" class="page active">
+
+  <!-- Tab switcher -->
+  <div class="tab-wrap">
+    <div class="tabs">
+      <button class="tab active" onclick="switchPlan('am', this)">
+        ☀️ 6am Morning
+      </button>
+      <button class="tab" onclick="switchPlan('pm', this)">
+        🌆 6pm Evening
+      </button>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Pre-workout</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Post-workout</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div>Daily health</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Intra-workout</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#555"></div>Meal</div>
+  </div>
+
+  <!-- AM PLAN -->
+  <div id="plan-am" class="plan active">
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">5:30</span>
+          <div class="tl-dot" style="background:#555"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Wake up</div>
+          <div class="pills"><span class="pill pill-food">Optional fruit</span></div>
+          <div class="tl-note">Banana or berries — fructose won't blunt training. Keep it light or go fully fasted.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">5:45</span>
+          <div class="tl-dot" style="background:var(--blue)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Pre-workout</div>
+          <div class="pills">
+            <span class="pill pill-pre">Bulk Black Pre-Workout</span>
+            <span class="pill pill-pre">Creatine HMB</span>
+            <span class="pill pill-intra">Hydrate ½ scoop</span>
+          </div>
+          <div class="tl-note">15–20 min before training. ½ scoop Hydrate to start hydrated going in fasted. Creatine here for habit consistency.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">6:00</span>
+          <div class="tl-dot" style="background:var(--amber)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Training</div>
+          <div class="pills"><span class="pill pill-intra">Hydrate ½ scoop (sip)</span></div>
+          <div class="tl-note">Sip the second half throughout the session. Maintains electrolyte balance and muscle contraction quality.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">7:15</span>
+          <div class="tl-dot" style="background:var(--accent)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Post-workout ⚡ Critical</div>
+          <div class="pills">
+            <span class="pill pill-post">Schinoussa Beef Protein</span>
+            <span class="pill pill-post">Build</span>
+          </div>
+          <div class="tl-note">Within 30–45 min. Most important supplement window — MPS is elevated. Build's recovery matrix complements your protein's amino profile.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">7:30</span>
+          <div class="tl-dot" style="background:var(--purple)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Breakfast</div>
+          <div class="pills">
+            <span class="pill pill-health">KSM-66 Ashwagandha</span>
+            <span class="pill pill-health">Growth</span>
+            <span class="pill pill-health">Omega-3</span>
+            <span class="pill pill-health">Vitamin D</span>
+            <span class="pill pill-health">Vitamin C</span>
+            <span class="pill pill-health">Pumpkin Seed Oil</span>
+          </div>
+          <div class="tl-note">All taken with food. Fat-soluble vitamins (D, omega-3) need dietary fat to absorb — never fasted. KSM-66 best with food for gut comfort.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">12:00</span>
+          <div class="tl-dot" style="background:#555"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Lunch</div>
+          <div class="pills"><span class="pill pill-food">High protein meal</span></div>
+          <div class="tl-note">Target 40–50g protein to maintain MPS signal through the afternoon. No supplements needed here.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">8:00 pm</span>
+          <div class="tl-dot" style="background:#555"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Dinner</div>
+          <div class="pills">
+            <span class="pill pill-food">High protein meal</span>
+            <span class="pill pill-health">Magnesium</span>
+          </div>
+          <div class="tl-note">Magnesium in the evening supports muscle relaxation and overnight recovery. Best taken away from calcium-rich foods.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PM PLAN -->
+  <div id="plan-pm" class="plan">
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">7:00</span>
+          <div class="tl-dot" style="background:var(--purple)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Breakfast</div>
+          <div class="pills">
+            <span class="pill pill-health">KSM-66 Ashwagandha</span>
+            <span class="pill pill-health">Growth</span>
+            <span class="pill pill-health">Omega-3</span>
+            <span class="pill pill-health">Vitamin D</span>
+            <span class="pill pill-health">Vitamin C</span>
+            <span class="pill pill-health">Pumpkin Seed Oil</span>
+          </div>
+          <div class="tl-note">All health supplements with your first meal. Fat-soluble vitamins need dietary fat — never fasted.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">12:00</span>
+          <div class="tl-dot" style="background:#555"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Big lunch</div>
+          <div class="pills">
+            <span class="pill pill-post">Creatine HMB</span>
+            <span class="pill pill-food">High protein meal</span>
+          </div>
+          <div class="tl-note">Creatine with your biggest meal — insulin spike from food improves creatine uptake into muscle cells. Optimal timing for PM trainers.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">4:30</span>
+          <div class="tl-dot" style="background:#555"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Fruit snack</div>
+          <div class="pills"><span class="pill pill-food">Fruit as planned</span></div>
+          <div class="tl-note">Fructose replenishes liver glycogen, glucose tops muscle glycogen. Solid pre-training fuel from whole food — you're set going into the session.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">5:30</span>
+          <div class="tl-dot" style="background:var(--blue)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Pre-workout</div>
+          <div class="pills">
+            <span class="pill pill-pre">Bulk Black Pre-Workout</span>
+            <span class="pill pill-intra">Hydrate ½ scoop</span>
+          </div>
+          <div class="tl-note">30 min before training. Fed state means pre-workout hits harder — expect better pump and endurance vs. the AM fasted scenario.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">6:00</span>
+          <div class="tl-dot" style="background:var(--amber)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Training</div>
+          <div class="pills"><span class="pill pill-intra">Hydrate ½ scoop (sip)</span></div>
+          <div class="tl-note">Sip through session. Summer evening heat means higher sweat rate — consider a full scoop if sessions run 75+ min.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">7:15</span>
+          <div class="tl-dot" style="background:var(--accent)"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Post-workout ⚡ Critical</div>
+          <div class="pills">
+            <span class="pill pill-post">Schinoussa Beef Protein</span>
+            <span class="pill pill-post">Build</span>
+          </div>
+          <div class="tl-note">Within 30–45 min. Solid lunch means your anabolic environment is primed — this hit locks in recovery and bridges to dinner.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <span class="tl-time">8:00</span>
+          <div class="tl-dot" style="background:#555"></div>
+        </div>
+        <div class="tl-card">
+          <div class="tl-card-label">Dinner</div>
+          <div class="pills">
+            <span class="pill pill-food">High protein dinner</span>
+            <span class="pill pill-health">Magnesium</span>
+          </div>
+          <div class="tl-note">Keep dinner protein high (40g+). Evening is when muscle repair peaks — GH is elevated during overnight sleep. Mag supports muscle relaxation post-training.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- STACK PAGE -->
+<div id="page-stack" class="page">
+  <div class="page-header">
+    <h2>Your Stack</h2>
+    <p>Transparent Labs — Summer 2026</p>
+  </div>
+
+  <div class="stack-section">
+
+    <div class="stack-card">
+      <span class="stack-tag pill-pre">Pre-workout</span>
+      <div class="stack-name">Bulk Black Pre-Workout</div>
+      <div class="stack-meta">Strawberry Mango · 1 scoop · 15–30 min pre-training<br>High-stim, clinically dosed. Caffeine + L-Citrulline + Beta-Alanine. Best pre-workout overall 2026 (Fortune).</div>
+    </div>
+
+    <div class="stack-card">
+      <span class="stack-tag pill-post">Recovery</span>
+      <div class="stack-name">Build</div>
+      <div class="stack-meta">Peach Mango · 1 scoop · Immediately post-workout<br>EAA/BCAA complex with recovery matrix. Pair with protein shake within 30–45 min of finishing training.</div>
+    </div>
+
+    <div class="stack-card">
+      <span class="stack-tag pill-post">Strength</span>
+      <div class="stack-name">Creatine HMB</div>
+      <div class="stack-meta">Blue Raspberry · 60sv · Daily — AM with pre-workout, PM with lunch<br>5g creatine + HMB for muscle retention and strength gains. Must be taken daily — timing flexible once saturated.</div>
+    </div>
+
+    <div class="stack-card">
+      <span class="stack-tag pill-intra">Hydration</span>
+      <div class="stack-name">Hydrate</div>
+      <div class="stack-meta">80 servings · Split ½ pre / ½ intra per session<br>500mg sodium, 250mg potassium + taurine + SenActiv®. Zero sugar. Use full scoop for 75+ min or high sweat sessions.</div>
+    </div>
+
+    <div class="stack-card">
+      <span class="stack-tag pill-health">Adaptogens</span>
+      <div class="stack-name">KSM-66 Ashwagandha</div>
+      <div class="stack-meta">60 servings · 1 capsule with breakfast<br>Cortisol management and testosterone support. Critical for hybrid athletes managing high training volume. Take with food.</div>
+    </div>
+
+    <div class="stack-card">
+      <span class="stack-tag pill-health">Hormonal</span>
+      <div class="stack-name">Growth</div>
+      <div class="stack-meta">30 servings / capsules · With breakfast (check label — may shift to pre-bed)<br>Check if ZMA-based: if yes, take 30 min before bed on empty stomach. Calcium blocks zinc absorption.</div>
+    </div>
+
+    <div class="stack-card">
+      <span class="stack-tag pill-food">Protein</span>
+      <div class="stack-name">Schinoussa Phyzik Beef Protein</div>
+      <div class="stack-meta">Non-TL · Post-workout daily<br>30g complete protein + 2.5g BCAAs + 5g glutamine per serving. Slow-digesting collagen component aids overnight recovery.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stack-card">
+      <span class="stack-tag pill-health">Health</span>
+      <div class="stack-name">Daily Basics (existing)</div>
+      <div class="stack-meta">
+        Omega-3 — with breakfast (fat-soluble)<br>
+        Vitamin D — with breakfast (fat-soluble)<br>
+        Vitamin C — with breakfast<br>
+        Pumpkin Seed Oil — with breakfast<br>
+        Magnesium — with dinner (evening recovery)
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TIPS PAGE -->
+<div id="page-tips" class="page">
+  <div class="page-header">
+    <h2>Coach's Notes</h2>
+    <p>Things to remember this summer</p>
+  </div>
+
+  <div class="tips-section">
+
+    <div class="tip-card">
+      <div class="tip-title">AM fasted training ceiling</div>
+      <div class="tip-body">Going in fully fasted limits your performance ceiling on heavy compound lifts. Even 30g of carbs (banana) makes a measurable difference. Don't be a hero — eat the fruit.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">PM pre-workout hits harder</div>
+      <div class="tip-body">A fed state means better blood flow, higher glycogen, and pre-workout ingredients absorb more effectively. If you're choosing a schedule for a heavy leg or pressing day, PM wins every time.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">Creatine saturation takes 2 weeks</div>
+      <div class="tip-body">Once saturated (after ~14 days of consistent daily dosing) the timing stops mattering. What matters is not missing days. Set an alarm if you have to.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">Growth timing check</div>
+      <div class="tip-body">If Growth contains ZMA (zinc + magnesium aspartate), the label will say take it before bed on an empty stomach. Calcium in food blocks zinc absorption. Check the label and shift accordingly.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">Hydrate scoop strategy</div>
+      <div class="tip-body">Split ½ pre / ½ intra for sessions 60–75 min. Use a full scoop pre-workout for shorter sessions (&lt;45 min). For 90+ min summer outdoor sessions, consider 1.5 scoops total.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">Post-workout window is real</div>
+      <div class="tip-body">30–45 min post-training is your highest MPS window. Don't shower, scroll, and forget. Have the shake ready to go before you start training so there's zero friction post-session.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">Protein targets — summer build</div>
+      <div class="tip-body">At 85kg targeting lean hypertrophy: aim for 170–190g protein daily (2g/kg). Your post-workout shake covers ~30g. Lunch and dinner need to carry 40–50g each. Breakfast fills the rest.</div>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip-title">Next upgrade — Black Friday 2026</div>
+      <div class="tip-body">Your stack runs ~3 months. Black Friday is TL's second major sale window (typically 25–30% off). Set a reminder for late November. Consider adding collagen or a greens powder at that point.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="switchPage('schedule', this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Schedule
+  </button>
+  <button class="nav-tab" onclick="switchPage('stack', this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    Stack
+  </button>
+  <button class="nav-tab" onclick="switchPage('tips', this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Notes
+  </button>
+</div>
+
+<script>
+function switchPlan(plan, btn) {
+  document.querySelectorAll('.plan').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('plan-' + plan).classList.add('active');
+  btn.classList.add('active');
+}
+function switchPage(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
